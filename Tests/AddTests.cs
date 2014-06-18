@@ -14,5 +14,10 @@ namespace Tests
         {
             Assert.That(Add(""), Is.EqualTo(0));
         }
+
+        private int Add(string input)
+        {
+            return 0;
+        }
     }
 }
