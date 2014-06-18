@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
+using Rhino.Mocks;
 
 namespace Tests
 {
@@ -12,7 +13,10 @@ namespace Tests
         [Test]
         public void AddingEmptyStringShouldReturnZero()
         {
+            ILogger logger = MockRepository.GenerateMock<ILogger>();
+            logger.Expect(l => l.Write("0"));
             Assert.That(new StringCalculator().Add(""), Is.EqualTo(0));
+            logger.VerifyAllExpectations();
         }
 
         [Test]
@@ -55,5 +59,10 @@ namespace Tests
                 ;
         }
          
+    }
+
+    public interface ILogger
+    {
+        void Write(string message);
     }
 }
