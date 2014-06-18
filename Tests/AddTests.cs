@@ -24,7 +24,19 @@ namespace Tests
         [Test]
         public void AddingTwoNumbersShouldReturnTheirSum()
         {
-            Assert.That(Add("1,2 "), Is.EqualTo(3));
+            Assert.That(Add("1, 2"), Is.EqualTo(3));
+        }
+
+        [Test]
+        public void AddingManyNumbersShouldReturnTheirSum()
+        {
+            Assert.That(Add("1, 2, 3, 4"), Is.EqualTo(10));
+        }
+
+        [Test]
+        public void NewlineCharacterShouldBeTreatedAsDelimiter()
+        {
+            Assert.That(Add("1\n2, 3"), Is.EqualTo(6));
         }
 
         public int Add(string input)
