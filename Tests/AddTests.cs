@@ -44,7 +44,7 @@ namespace Tests
             if (string.IsNullOrEmpty(input))
                 return 0;
             return input
-                .Split(',')
+                .Split(',', '\n')
                 .Select(int.Parse)
                 .Sum()
                 ;
