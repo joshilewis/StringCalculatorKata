@@ -21,11 +21,21 @@ namespace Tests
             Assert.That(Add("1"), Is.EqualTo(1));
         }
 
+        [Test]
+        public void AddingTwoNumbersShouldReturnTheirSum()
+        {
+            Assert.That(Add("1,2 "), Is.EqualTo(3));
+        }
+
         public int Add(string input)
         {
             if (string.IsNullOrEmpty(input))
                 return 0;
-
+            return input
+                .Split(',')
+                .Select(int.Parse)
+                .Sum()
+                ;
             return int.Parse(input);
         }
     }
