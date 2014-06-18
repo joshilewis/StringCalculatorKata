@@ -15,7 +15,13 @@ namespace Tests
             Assert.That(Add(""), Is.EqualTo(0));
         }
 
-        private int Add(string input)
+        [Test]
+        public void AddingSingleNumberShouldReturnThatNumber()
+        {
+            Assert.That(Add("1"), Is.EqualTo(1));
+        }
+
+        public int Add(string input)
         {
             return 0;
         }
