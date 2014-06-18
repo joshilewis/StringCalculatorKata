@@ -9,5 +9,10 @@ namespace Tests
     [TestFixture]
     public class AddTests
     {
+        [Test]
+        public void AddingEmptyStringShouldReturnZero()
+        {
+            Assert.That(Add(""), Is.EqualTo(0));
+        }
     }
 }
