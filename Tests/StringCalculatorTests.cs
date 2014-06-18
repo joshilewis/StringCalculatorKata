@@ -10,59 +10,90 @@ namespace Tests
     [TestFixture]
     public class StringCalculatorTests
     {
+        private ILogger logger;
+
+        [SetUp]
+        public void SetUp()
+        {
+            logger = MockRepository.GenerateMock<ILogger>();
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            logger = null;
+        }
+
+        private void ActAndAssert(string input, int expectedSum)
+        {
+            logger.Expect(l => l.Write(expectedSum));
+            Assert.That(new StringCalculator(logger).Add(input), Is.EqualTo(expectedSum));
+            logger.VerifyAllExpectations();
+        }
+
         [Test]
         public void AddingEmptyStringShouldReturnZero()
         {
-            ILogger logger = MockRepository.GenerateMock<ILogger>();
-            logger.Expect(l => l.Write("0"));
-            Assert.That(new StringCalculator().Add(""), Is.EqualTo(0));
-            logger.VerifyAllExpectations();
+            ActAndAssert("", 0);
         }
 
         [Test]
         public void AddingSingleNumberShouldReturnThatNumber()
         {
-            Assert.That(new StringCalculator().Add("1"), Is.EqualTo(1));
+            ActAndAssert("1", 1);
         }
 
         [Test]
         public void AddingTwoNumbersShouldReturnTheirSum()
         {
-            Assert.That(new StringCalculator().Add("1, 2"), Is.EqualTo(3));
+            ActAndAssert("1,2", 3);
         }
 
         [Test]
         public void AddingManyNumbersShouldReturnTheirSum()
         {
-            Assert.That(new StringCalculator().Add("1, 2, 3, 4"), Is.EqualTo(10));
+            ActAndAssert("1, 2, 3, 4", 10);
         }
 
         [Test]
         public void NewlineCharacterShouldBeTreatedAsDelimiter()
         {
-            Assert.That(new StringCalculator().Add("1\n2, 3"), Is.EqualTo(6));
+            ActAndAssert("1\n2,3", 6);
         }
 
     }
 
     public class StringCalculator
     {
+        private readonly ILogger logger;
+
+        public StringCalculator(ILogger logger)
+        {
+            this.logger = logger;
+        }
+
         public int Add(string input)
+        {
+            int result = AddWithoutLogging(input);
+            logger.Write(result);
+            return result;
+
+        }
+
+        private int AddWithoutLogging(string input)
         {
             if (string.IsNullOrEmpty(input))
                 return 0;
 
-            return input
-                .Split(',', '\n')
-                .Select(int.Parse)
+            return Enumerable.Select<string, int>(input
+                .Split(',', '\n'), int.Parse)
                 .Sum()
                 ;
         }
-         
     }
 
     public interface ILogger
     {
-        void Write(string message);
+        void Write(int sum);
     }
 }
